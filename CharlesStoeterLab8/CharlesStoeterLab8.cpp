@@ -13,8 +13,13 @@ float bee_x = 400;
 float bee_y = 300;
 float bee_dx = 4;   
 float bee_dy = 0;
+
 bool paused = false;
+
 int flip_flag = 0;
+
+float angle = 0.0f;
+bool rotating = false;
 
 
 
@@ -124,10 +129,39 @@ int main() {
         else if (ev.type == ALLEGRO_EVENT_TIMER) {
 
 
-            if (!paused) {
+            if (!paused && !rotating) {
                 bee_x += bee_dx;
                 bee_y += bee_dy;
+
+                // Check for left/right edge
+                if (bee_x <= 0 || bee_x >= SCREEN_W - al_get_bitmap_width(bee)) {
+                    rotating = true;
+                }
+                // Check for top/bottom edge
+                else if (bee_y <= 0 || bee_y >= SCREEN_H - al_get_bitmap_height(bee)) {
+                    rotating = true;
+                }
             }
+
+            // Rotate if needed
+            if (rotating) {
+                angle += 0.1f;
+                if (angle >= 3.14f) {
+
+					
+                    angle = 0.0f;
+                    
+                    rotating = false;// Done rotating
+
+                    bee_dx = -bee_dx;// Reverse direction
+
+                    bee_dy = -bee_dy;
+
+                    flip_flag = 0; // Reset flip 
+                }
+            }
+
+
             redraw = true;
         }
 
@@ -198,8 +232,8 @@ int main() {
             // Draw background
             al_draw_bitmap(background, 0, 0, 0);
 
-            // Draw bee in center for now
-            al_draw_bitmap(bee, bee_x, bee_y, flip_flag);
+            // Draw bee in center 
+            al_draw_rotated_bitmap(bee, al_get_bitmap_width(bee) / 2, al_get_bitmap_height(bee) / 2,  bee_x + al_get_bitmap_width(bee) / 2, bee_y + al_get_bitmap_height(bee) / 2, angle, flip_flag);
 
 
 
