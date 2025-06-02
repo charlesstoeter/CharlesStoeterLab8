@@ -11,9 +11,11 @@ float bee_dx = 4;
 float bee_dy = 0;
 bool paused = false;
 
+float target_angle = 0.0f;
+
 float angle = 0.0f;
 bool rotating = false;
-int flip_flag = 0;
+
 
 int main() {
     if (!al_init()) {
@@ -88,6 +90,15 @@ int main() {
                 if (bee_y <= 0 || bee_y >= SCREEN_H - al_get_bitmap_height(bee)) {
                     rotating = true;
                 }
+
+                if (angle < target_angle) {
+                    angle += 0.1f;
+                    if (angle > target_angle) angle = target_angle;
+                }
+                else if (angle > target_angle) {
+                    angle -= 0.1f;
+                    if (angle < target_angle) angle = target_angle;
+                }
             }
 
             // Smooth rotation logic
@@ -120,22 +131,22 @@ int main() {
             else if (ev.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
                 bee_dx = 4;
                 bee_dy = 0;
-                flip_flag = 0;
+                target_angle = 1.57f;  // rotate to face right
             }
             else if (ev.keyboard.keycode == ALLEGRO_KEY_LEFT) {
                 bee_dx = -4;
                 bee_dy = 0;
-                flip_flag = ALLEGRO_FLIP_HORIZONTAL;
+                target_angle = -1.57f; // rotate to face left
             }
             else if (ev.keyboard.keycode == ALLEGRO_KEY_UP) {
                 bee_dx = 0;
                 bee_dy = -4;
-                flip_flag = 0;
+                // keep current target_angle
             }
             else if (ev.keyboard.keycode == ALLEGRO_KEY_DOWN) {
                 bee_dx = 0;
                 bee_dy = 4;
-                flip_flag = ALLEGRO_FLIP_VERTICAL;
+                // keep current target_angle
             }
         }
 
@@ -152,7 +163,7 @@ int main() {
                 bee_x + al_get_bitmap_width(bee) / 2,
                 bee_y + al_get_bitmap_height(bee) / 2,
                 angle,
-                flip_flag
+                0
             );
 
             al_flip_display();
