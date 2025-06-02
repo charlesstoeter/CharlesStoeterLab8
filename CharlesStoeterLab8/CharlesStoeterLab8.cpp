@@ -9,11 +9,12 @@ const int SCREEN_W = 900;
 const int SCREEN_H = 800;
 
 
-float bee_x = 400;  // Start somewhere near center
+float bee_x = 400;  
 float bee_y = 300;
-float bee_dx = 4;   // Speed to the right
+float bee_dx = 4;   
 float bee_dy = 0;
 bool paused = false;
+int flip_flag = 0;
 
 
 
@@ -134,12 +135,56 @@ int main() {
 
 
         else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+
+
+
+
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                 running = false;
             }
             else if (ev.keyboard.keycode == ALLEGRO_KEY_SPACE) {
+
                 paused = !paused;
+
+
             }
+            else if (ev.keyboard.keycode == ALLEGRO_KEY_RIGHT) {
+
+
+                bee_dx = 4;
+                bee_dy = 0;
+                flip_flag = 0; // No flip
+
+
+            }
+            else if (ev.keyboard.keycode == ALLEGRO_KEY_LEFT) {
+
+
+                bee_dx = -4;
+                bee_dy = 0;
+                flip_flag = ALLEGRO_FLIP_HORIZONTAL;
+
+
+            }
+            else if (ev.keyboard.keycode == ALLEGRO_KEY_UP) {
+
+
+                bee_dx = 0;
+                bee_dy = -4;
+                flip_flag = 0; // No flip
+
+
+            }
+            else if (ev.keyboard.keycode == ALLEGRO_KEY_DOWN) {
+
+
+                bee_dx = 0;
+                bee_dy = 4;
+                flip_flag = ALLEGRO_FLIP_VERTICAL;
+
+
+            }
+
         }
 
 
@@ -154,7 +199,8 @@ int main() {
             al_draw_bitmap(background, 0, 0, 0);
 
             // Draw bee in center for now
-            al_draw_bitmap(bee, bee_x, bee_y, 0);
+            al_draw_bitmap(bee, bee_x, bee_y, flip_flag);
+
 
 
             al_flip_display();
