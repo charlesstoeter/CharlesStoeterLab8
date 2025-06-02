@@ -22,4 +22,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="bee.png">
+      <Filter>Source Files</Filter>
+    </Image>
+    <Image Include="field.jpg">
+      <Filter>Source Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
